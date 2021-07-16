@@ -33,8 +33,8 @@
 // acquire any locks, and can therefore be used by low-level memory
 // allocation and synchronization code.
 
-#ifndef BASE_RAW_LOGGING_H_
-#define BASE_RAW_LOGGING_H_
+#ifndef GLOG_RAW_LOGGING_H
+#define GLOG_RAW_LOGGING_H
 
 #include <ctime>
 
@@ -50,6 +50,11 @@
 # else
 #   define GOOGLE_GLOG_DLL_DECL
 # endif
+#endif
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvariadic-macros"
 #endif
 
 // This is similar to LOG(severity) << format... and VLOG(level) << format..,
@@ -160,6 +165,10 @@
 
 #endif  // NDEBUG
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
+
 // Stub log function used to work around for unused variable warnings when
 // building with STRIP_LOG > 0.
 static inline void RawLogStub__(int /* ignored */, ...) {
@@ -177,4 +186,4 @@ GOOGLE_GLOG_DLL_DECL void RawLog__(LogSeverity severity,
 
 @ac_google_end_namespace@
 
-#endif  // BASE_RAW_LOGGING_H_
+#endif  // GLOG_RAW_LOGGING_H
