@@ -287,7 +287,7 @@ FindSymbol(uint64_t pc, const int fd, char *out, size_t out_size,
     // If we are reading Elf64_Sym's, we want to limit this array to
     // 32 elements (to keep stack consumption low), otherwise we can
     // have a 64 element Elf32_Sym array.
-#if __WORDSIZE == 64
+#if defined(__WORDSIZE) && __WORDSIZE == 64
     const size_t NUM_SYMBOLS = 32U;
 #else
     const size_t NUM_SYMBOLS = 64U;
