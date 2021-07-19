@@ -1011,7 +1011,7 @@ PLOG_IF(FATAL, GOOGLE_PREDICT_BRANCH_NOT_TAKEN((invocation) == -1))    \
 #  endif
 #endif
 
-#if !defined(GLOG_SANITIZE_THREAD) && __SANITIZE_THREAD__
+#if !defined(GLOG_SANITIZE_THREAD) && defined(__SANITIZE_THREAD__) && __SANITIZE_THREAD__
 #  define GLOG_SANITIZE_THREAD 1
 #endif
 
