@@ -450,7 +450,7 @@ class LogFileObject : public base::Logger {
   uint32 file_length_;
   unsigned int rollover_attempt_;
   int64 next_flush_time_;         // cycle count at which to flush log
-
+  bool log_file_toggle_ = true;
   // Actually create a logfile using the value of base_filename_ and the
   // optional argument time_pid_string
   // REQUIRES: lock_ is held
@@ -998,6 +998,9 @@ bool LogFileObject::CreateLogfile(const string& time_pid_string) {
   string string_filename = base_filename_+filename_extension_;
   if (FLAGS_timestamp_in_logfile_name) {
     string_filename += time_pid_string;
+  } else {
+	string_filename += log_file_toggle_ ? string("a") : string("b");
+	log_file_toggle_ = !log_file_toggle_;
   }
   const char* filename = string_filename.c_str();
   //only write to files, create if non-existant.
@@ -1005,6 +1008,9 @@ bool LogFileObject::CreateLogfile(const string& time_pid_string) {
   if (FLAGS_timestamp_in_logfile_name) {
     //demand that the file is unique for our timestamp (fail if it exists).
     flags = flags | O_EXCL;
+  } else {
+    //make sure to clean the file
+    flags = flags | O_TRUNC;
   }
   int fd = open(filename, flags, FLAGS_logfile_mode);
   if (fd == -1) return false;
